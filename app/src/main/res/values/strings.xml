@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name_popular_movies">Popular Movies</string>
+    <string name="show_top_rated_movies">Show Top Rated Movies</string>
+    <string name="show_popular_movies">Show Popular Movies</string>
+    <string name="error_message_1">Failed to load data!</string>
+    <string name="error_message_2">Please Check your internet connection.</string>
+    <string name="refresh">Refresh</string>
+    <string name="movie_detail">Movie Detail</string>
+    <string name="detail_activity_error">Error setting colors in DetailsActivity!</string>
+    <string name="release_date_title">Release:</string>
+    <string name="movie_overview">Overview:</string>
+    <string name="rating_title">Rating:</string>
+    <string name="color_error_in_adapter">Error applying color</string>
+    <string name="app_name_top_rated_movies">Top Rated Movies</string>
+    <string name="movie_poster_in_detail_activity">movie poster in detail activity</string>
+    <string name="star_icon_in_detail_activity">star icon in detail activity</string>
+    <string name="movie_poster_in_main_activity">movie poster in main activity</string>
+    <string name="star_icon_in_main_activity">star icon in main activity</string>
+</resources>

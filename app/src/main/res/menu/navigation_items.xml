@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+
+        <item android:title="@string/movies_navigation_group_title">
+
+            <menu>
+                <item
+                    android:id="@+id/action_top_rated_movies"
+                    android:checkable="true"
+                    android:orderInCategory="2"
+                    android:title="@string/show_top_rated_movies" />
+                <item
+                    android:id="@+id/action_favorite_movies"
+                    android:checkable="true"
+                    android:orderInCategory="3"
+                    android:title="@string/favorite_movies" />
+                <item
+                    android:id="@+id/action_popular_movies"
+                    android:checkable="true"
+                    android:orderInCategory="1"
+                    android:title="@string/show_popular_movies" />
+            </menu>
+
+        </item>
+    </group>
+</menu>

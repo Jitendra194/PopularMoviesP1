@@ -1,19 +1,43 @@
 <resources>
     <string name="app_name_popular_movies">Popular Movies</string>
-    <string name="show_top_rated_movies">Show Top Rated Movies</string>
-    <string name="show_popular_movies">Show Popular Movies</string>
+    <string name="show_top_rated_movies">Top Rated Movies</string>
+    <string name="show_popular_movies">Popular Movies</string>
     <string name="error_message_1">Failed to load data!</string>
     <string name="error_message_2">Please Check your internet connection.</string>
     <string name="refresh">Refresh</string>
     <string name="movie_detail">Movie Detail</string>
-    <string name="detail_activity_error">Error setting colors in DetailsActivity!</string>
     <string name="release_date_title">Release:</string>
     <string name="movie_overview">Overview:</string>
     <string name="rating_title">Rating:</string>
     <string name="color_error_in_adapter">Error applying color</string>
     <string name="app_name_top_rated_movies">Top Rated Movies</string>
-    <string name="movie_poster_in_detail_activity">movie poster in detail activity</string>
-    <string name="star_icon_in_detail_activity">star icon in detail activity</string>
     <string name="movie_poster_in_main_activity">movie poster in main activity</string>
     <string name="star_icon_in_main_activity">star icon in main activity</string>
+    <string name="duration_title">Duration:</string>
+    <string name="detail_activity_error_1">Only Movies set to favorite can be viewed offline.</string>
+    <string name="detail_activity_error_2">Reconnect to the network and press refresh!</string>
+    <string name="refresh_button_title">Refresh</string>
+    <string name="menu_item_refresh_data">Refresh Data</string>
+    <string name="favorite_movies">Favorite Movies</string>
+    <string name="movies_navigation_group_title">MOVIES</string>
+
+    <string name="drawer_open">Navigation drawer is open</string>
+    <string name="drawer_close">Navigation drawer is close</string>
+    <string name="dialog_remove_title">Remove Favorite?</string>
+    <string name="delete">YES</string>
+    <string name="cancel">NO</string>
+    <string name="delete_all_favorites">Remove All Favorites</string>
+    <string name="no_fav_movies_string">Don\'t have any favorite movies?</string>
+    <string name="get_started_string">Get started by hitting the star next to the movie title!</string>
+    <string name="trailer_title">Trailers:</string>
+    <string name="view_more_trailers_text">View more..</string>
+    <string name="reviews_title">Reviews:</string>
+    <string name="no_reviews_are_available">No reviews are available for this movie.</string>
+    <string name="no_trailers_are_available">No trailers are available for this movie.</string>
+    <string name="share_youtube_link">Share youtube link</string>
+    <string name="please_connect_to_internet">Please connect to the internet!</string>
+    <string name="no_videos_available">No videos are available.</string>
+    <string name="no_reviews_available">No reviews are available.</string>
+    <string name="no_trailers_available_for_sharing">No Trailers are available to share!</string>
+
 </resources>

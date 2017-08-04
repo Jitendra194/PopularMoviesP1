@@ -1,6 +1,7 @@
 package com.example.android.popularmoviespart1;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,23 +12,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.android.popularmoviespart1.MoviesData.Movie;
+import com.example.android.popularmoviespart1.data.MoviesContract;
 import com.example.android.popularmoviespart1.utilities.ExtractImageColor;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
 class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    // flag for footer ProgressBar (i.e. last item of list)
-    private boolean isLoadingAdded = false;
-
     private final ListItemClickListener clickListener;
 
-    private static final int LOADING = 0;
     private static final int ITEM = 1;
 
     private ArrayList<Movie> mMovies;
+    private Cursor mCursor;
 
     private static final String TAG = MoviesAdapter.class.getSimpleName();
 
@@ -37,18 +38,16 @@ class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public interface ListItemClickListener {
-        void onListItemClick(Movie movie);
+        void onListItemClick(int movieId);
+
+        void onListItemLongClick(int movieId);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        if (viewType == LOADING) {
-            int itemLayoutResource = R.layout.progress_bar;
-            View view = inflater.inflate(itemLayoutResource, parent, false);
-            return new LoadingViewHolder(view);
-        } else if (viewType == ITEM) {
+        if (viewType == ITEM) {
             int itemLayoutResource = R.layout.movie_list_item;
             View view = inflater.inflate(itemLayoutResource, parent, false);
             return new MoviesViewHolder(view);
@@ -58,36 +57,46 @@ class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Movie movie = mMovies.get(position);
-        if (holder.getItemViewType() == ITEM) {
-            MoviesViewHolder moviesViewHolder = (MoviesViewHolder) holder;
-            moviesViewHolder.bind(movie);
+        MoviesViewHolder moviesViewHolder = (MoviesViewHolder) holder;
+        Movie movie = null;
+        if (mCursor == null) {
+            movie = mMovies.get(position);
+        } else {
+            mCursor.moveToPosition(position);
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return mMovies == null ? 0 : mMovies.size();
+        moviesViewHolder.bind(movie, mCursor);
     }
 
     @Override
     public int getItemViewType(int position) {
-        return (isLoadingAdded) ? LOADING : ITEM;
+        return ITEM;
     }
 
-    public void setMovies(ArrayList<Movie> movies) {
+    @Override
+    public int getItemCount() {
+        if (mCursor == null) {
+            return mMovies == null ? 0 : mMovies.size();
+        } else {
+            return mCursor.getCount();
+        }
+    }
+
+    public void setMovies(ArrayList<Movie> movies, Cursor cursor) {
         mMovies = movies;
+        mCursor = cursor;
     }
 
-    class MoviesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class MoviesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         private final Context context;
-        private final ImageView mMovieImage;
-        private final LinearLayout linearLayout;
-        private final TextView mMovieTitle;
-        private final ImageView mStarView;
-        private final TextView mMovieRating;
+        public final ImageView mMovieImage;
+        public final LinearLayout linearLayout;
+        public final TextView mMovieTitle;
+        public final ImageView mStarView;
+        public final TextView mMovieRating;
         private ExtractImageColor extractImageColor;
+
+        private int MOVIE_ID;
 
         public MoviesViewHolder(View itemView) {
             super(itemView);
@@ -98,21 +107,48 @@ class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mStarView = itemView.findViewById(R.id.star_color);
             mMovieRating = itemView.findViewById(R.id.movie_rating);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
-        public void bind(Movie movie) {
-            mMovieTitle.setText(movie.getTitle());
-            mMovieRating.setText(String.valueOf(movie.getMovieRating()));
-            Picasso.with(context).load(movie.getPosterUrl()).into(getTarget());
+        public void bind(Movie movie, Cursor mCursor) {
+            if (mCursor == null) {
+                mMovieTitle.setText(movie.getTitle());
+                mMovieRating.setText(String.valueOf(movie.getMovieRating()));
+                Picasso.with(context).load(movie.getPosterUrl()).into(getTarget(mMovieImage));
+            } else {
+                String name = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_MOVIE_TITLE));
+                String id = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID));
+                double rating = mCursor.getDouble(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_MOVIE_RATING));
+                String poster = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_MOVIE_POSTER_IMAGE_PATH));
+
+                MOVIE_ID = Integer.parseInt(id);
+
+                File file = new File(poster + "/" + id + "_1.jpg");
+                Picasso.with(context).load(file).into(getTarget(mMovieImage));
+                mMovieRating.setText(String.valueOf(rating));
+                mMovieTitle.setText(name);
+            }
         }
 
         @Override
         public void onClick(View view) {
-            clickListener.onListItemClick(mMovies.get(getAdapterPosition()));
+            if (mCursor == null) {
+                clickListener.onListItemClick(mMovies.get(getAdapterPosition()).getId());
+            } else {
+                clickListener.onListItemClick(MOVIE_ID);
+            }
         }
 
-        private ExtractImageColor getTarget() {
-            extractImageColor = new ExtractImageColor(mMovieImage) {
+        @Override
+        public boolean onLongClick(View view) {
+            if (mCursor != null) {
+                clickListener.onListItemLongClick(MOVIE_ID);
+            }
+            return true;
+        }
+
+        public ExtractImageColor getTarget(ImageView imageView) {
+            extractImageColor = new ExtractImageColor(imageView) {
                 @Override
                 public void setSwatchToViews(Palette.Swatch swatch) {
                     linearLayout.setBackgroundColor(swatch.getRgb());
@@ -135,18 +171,4 @@ class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    class LoadingViewHolder extends RecyclerView.ViewHolder {
-
-        public LoadingViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    public void addLoadingFooter() {
-        isLoadingAdded = true;
-    }
-
-    public void removeLoadingFooter() {
-        isLoadingAdded = false;
-    }
 }

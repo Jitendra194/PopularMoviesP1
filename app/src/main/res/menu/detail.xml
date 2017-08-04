@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_share_youtube_link"
+        android:icon="@drawable/ic_action_share"
+        android:title="@string/share_youtube_link"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/detail_refresh_action"
+        android:icon="@drawable/ic_refresh"
+        android:title="@string/menu_item_refresh_data"
+        app:showAsAction="ifRoom" />
+</menu>

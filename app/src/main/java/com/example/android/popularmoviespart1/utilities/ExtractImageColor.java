@@ -11,6 +11,7 @@ import com.squareup.picasso.Target;
 import java.util.List;
 
 
+@SuppressWarnings("EmptyMethod")
 public abstract class ExtractImageColor implements Target {
 
     private final ImageView mImageView;
@@ -21,8 +22,10 @@ public abstract class ExtractImageColor implements Target {
 
     @Override
     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
         mImageView.setImageBitmap(bitmap);
         generateColorSwatch(bitmap);
+
     }
 
     @Override
